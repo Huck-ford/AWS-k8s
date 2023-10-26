@@ -6,9 +6,34 @@ metadata:
     kubernetes.io/ingress.class: 'nginx' 
     nginx.ingress.kubernetes.io/use-regex: 'true'
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kuberentes.io/ssl-redirect: 'true'
 spec:
+  tls:
+    - hosts:
+        - huckforde.com
+        - www.huckforde.com
+      secretName: huckforde-com
   rules:
-    - http:
+    - host: huckforde.com
+      http:
+        paths:
+          - path: /?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: client-cluster-ip-service
+                port:
+                  number: 3000
+          - path: /api/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: server-cluster-ip-service
+                port:
+                  number: 5000
+    - host: www.huckforde.com
+      http:
         paths:
           - path: /?(.*)
             pathType: ImplementationSpecific
