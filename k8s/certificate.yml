@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: huckforde-com-tls
+spec:
+  secretName: huckforde-com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: huckforde.com
+  dnsNames:
+    - huckforde.com
+    - www.huckforde.com
